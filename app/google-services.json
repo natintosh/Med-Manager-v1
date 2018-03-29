@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "963870107972",
+    "firebase_url": "https://med-manager-1227e.firebaseio.com",
+    "project_id": "med-manager-1227e",
+    "storage_bucket": "med-manager-1227e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963870107972:android:9c541a9c0638466a",
+        "android_client_info": {
+          "package_name": "com.natinc.oluwatobiloba.medmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "963870107972-8iqktd0pjkaci2tf2kk0qgcq87ij2pfg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.natinc.oluwatobiloba.medmanager",
+            "certificate_hash": "7d2a5794de298b10d3f38a4a13497aff493ea880"
+          }
+        },
+        {
+          "client_id": "963870107972-jttl8q553ldetlek03c0lo0t21lj0d6o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsMz-u9pLR1zF06lJ076a4zFOm1tV0eP0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "963870107972-jttl8q553ldetlek03c0lo0t21lj0d6o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
