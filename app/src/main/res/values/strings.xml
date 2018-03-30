@@ -3,4 +3,5 @@
     <string name="unknown_error">Unknown error has occurred</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="sign_in_cancelled">Signing In cancelled</string>
+    <string name="gender_label">Gender</string>
 </resources>
