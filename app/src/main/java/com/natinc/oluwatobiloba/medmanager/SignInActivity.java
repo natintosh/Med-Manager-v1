@@ -2,9 +2,10 @@ package com.natinc.oluwatobiloba.medmanager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.BuildConfig;
@@ -12,6 +13,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +26,7 @@ public class SignInActivity extends AppCompatActivity {
 
     // Firebase instance variables
     FirebaseAuth mFirebaseAuth;
-    FirebaseUser mFirebaseUser;
+    FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,24 +35,30 @@ public class SignInActivity extends AppCompatActivity {
 
         // Initialize firebase variable
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        if (hasUserSignIn(mFirebaseUser)) {
-            launchDashBoardIntent();
-        } else {
-            List<AuthUI.IdpConfig> providerList = Arrays.asList(
-                    new AuthUI.IdpConfig.EmailBuilder().build(),
-                    new AuthUI.IdpConfig.GoogleBuilder().build());
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is sign in
+                    launchDashBoardIntent();
+                } else {
+                    //User is sign out
+                    List<AuthUI.IdpConfig> providerList = Arrays.asList(
+                            new AuthUI.IdpConfig.EmailBuilder().build(),
+                            new AuthUI.IdpConfig.GoogleBuilder().build());
 
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setAvailableProviders(providerList)
-                            .setIsSmartLockEnabled(!BuildConfig.DEBUG, true)
-                            .build(),
-                    RC_SIGN_IN);
-
-        }
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setAvailableProviders(providerList)
+                                    .setIsSmartLockEnabled(BuildConfig.DEBUG, true)
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+            }
+        };
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -61,50 +69,49 @@ public class SignInActivity extends AppCompatActivity {
 
             // Successfully signed in
             if (resultCode == RESULT_OK) {
-//                startActivity(DashBoardActivity.createIntent(this, response));
-                finish();
+                FirebaseUserMetadata metadata = mFirebaseAuth.getCurrentUser().getMetadata();
+                if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
+                    // The user is new, show them a fancy intro screen!
+                } else {
+                    launchDashBoardIntent();
+                    finish();
+                }
             } else {
                 // Sign in failed
                 if (response == null) {
                     // User pressed back button
-                    showSnackbar(R.string.sign_in_cancelled);
+                    showToast(R.string.sign_in_cancelled);
                     return;
                 }
 
                 if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    showSnackbar(R.string.no_internet_connection);
+                    showToast(R.string.no_internet_connection);
                     return;
                 }
 
-                showSnackbar(R.string.unknown_error);
+                showToast(R.string.unknown_error);
                 Log.e(LOG_TAG, "Sign-in error: ", response.getError());
             }
         }
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        // Initialize firebase variable
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        if (mFirebaseUser != null) {
-            Intent dashBoardIntent = new Intent(SignInActivity.this, DashBoardActivity.class);
-            dashBoardIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(dashBoardIntent);
-        }
+    protected void onResume() {
+        super.onResume();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
-    private void showSnackbar(int msg) {
-        Snackbar.make(findViewById(R.id.sign_in_constraint_layout),
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+    }
+
+    private void showToast(int msg) {
+        Toast.makeText(this,
                 getResources().getString(msg),
-                Snackbar.LENGTH_LONG)
+                Toast.LENGTH_LONG)
                 .show();
-    }
-
-    private boolean hasUserSignIn(FirebaseUser mFirebaseUser) {
-        return mFirebaseUser != null;
     }
 
     private void launchDashBoardIntent() {
