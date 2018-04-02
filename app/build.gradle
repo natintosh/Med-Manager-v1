@@ -29,11 +29,13 @@ dependencies {
     // Firebase Libery compilation
     implementation 'com.google.firebase:firebase-core:12.0.1'
     implementation 'com.google.firebase:firebase-auth:12.0.1'
+    implementation 'com.google.firebase:firebase-storage:12.0.1'
     implementation 'com.firebaseui:firebase-ui-auth:3.3.0'
 
     // Custom library
+    implementation 'com.github.d-max:spots-dialog:0.7@aar'
     implementation 'lib.kingja.switchbutton:switchbutton:1.1.6'
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
 
 apply plugin: 'com.google.gms.google-services'

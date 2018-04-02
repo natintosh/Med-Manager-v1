@@ -7,16 +7,15 @@
     tools:context="com.natinc.oluwatobiloba.medmanager.EditProfileActivity">
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/edit_profile_image"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:onClick="clickedCircleImageView"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/default_profile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +34,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_profile_image"
         tools:text="John Smith" />
+
+    <EditText
+        android:id="@+id/edit_name_text_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:hint="Firstname &amp; LastName"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textColor="@color/colorPrimary"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_image" />
 
     <TextView
         android:id="@+id/edit_email_text_view"
@@ -75,32 +90,22 @@
         app:switchTabs="@array/switch_tabs"
         app:textSize="14sp" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/edit_phone_number_text_input"
+    <EditText
+        android:id="@+id/edit_phone_number_text_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:textColorHint="@color/colorPrimary"
-        app:backgroundTint="@color/colorPrimary"
-        app:hintTextAppearance="@color/colorPrimary"
+        android:hint="@string/phone_number_label"
+        android:inputType="phone"
+        android:maxLength="14"
+        android:maxLines="1"
+        android:text="@string/phone_number_default_value"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_gender_label">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/edit_phone_number_text_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/phone_number_label"
-            android:inputType="phone"
-            android:maxLength="14"
-            android:maxLines="1"
-            android:text="@string/phone_number_default_value"
-            android:textColor="@color/colorPrimary"
-            app:backgroundTint="@color/colorPrimary" />
-    </android.support.design.widget.TextInputLayout>
+        app:layout_constraintTop_toBottomOf="@+id/edit_gender_label" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/continue_fab"
