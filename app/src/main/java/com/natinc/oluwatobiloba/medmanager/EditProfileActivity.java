@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,13 +26,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 
 import dmax.dialog.SpotsDialog;
 import lib.kingja.switchbutton.SwitchMultiButton;
@@ -57,10 +59,11 @@ public class EditProfileActivity extends AppCompatActivity {
     FirebaseAuth mFirebaseAuth;
     FirebaseUser mFirebaseUser;
     FirebaseStorage mFirebaseStorage;
+    FirebaseFirestore mFirebaseFirestore;
     StorageReference mStorageRef;
     UploadTask mUploadTask;
 
-    Uri mImageUri;
+    Uri mLocalImageUri;
 
 
     @Override
@@ -73,6 +76,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mFirebaseStorage = FirebaseStorage.getInstance();
+        mFirebaseFirestore = FirebaseFirestore.getInstance();
         mStorageRef = mFirebaseStorage.getReference();
 
         if (mFirebaseUser.getDisplayName() != null) {
@@ -113,37 +117,64 @@ public class EditProfileActivity extends AppCompatActivity {
         mContinueFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                updateInstanceVarible();
                 mProgressDialog.show();
                 mProgressDialog.setCancelable(false);
                 updateAndStoreUser();
+                startActivity(new Intent(EditProfileActivity.this, DashBoardActivity.class));
             }
         });
 
     }
 
-    private void updateAndStoreUser() {
-        StorageReference profileImagesRef = mStorageRef.child("images/" + mImageUri.getLastPathSegment());
-        mUploadTask = profileImagesRef.putFile(mImageUri);
+    private void updateInstanceVarible() {
+        if (mFirebaseUser.getDisplayName() == null) {
+            mName = mNameTextEditText.getText().toString();
+        }
+        if (mPhoneNumberTextEditText.getText().toString().equals(getResources().getText(R.string.phone_number_default_value))) {
+            mPhoneNumber = null;
+        } else {
+            mPhoneNumber = mPhoneNumberTextEditText.getText().toString();
+        }
+    }
 
-// Register observers to listen for when the download is done or if it fails
+    private void updateAndStoreUser() {
+        String imageLabel = "IMG_" + mFirebaseUser.getUid();
+        StorageReference profileImagesRef = mStorageRef.child("images/" + imageLabel);
+
+        mEditProfileImage.setDrawingCacheEnabled(true);
+        mEditProfileImage.buildDrawingCache();
+        Bitmap bitmap = mEditProfileImage.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        mUploadTask = profileImagesRef.putBytes(data);
+
+
+        // Register observers to listen for when the download is done or if it fails
         mUploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
+                mProgressDialog.cancel();
+                Toast.makeText(EditProfileActivity.this, "Error occured while updating profile", Toast.LENGTH_LONG)
+                        .show();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                updateUserProfile(mFirebaseUser, downloadUrl);
             }
         });
     }
 
-    private void updateUserProfile() {
+    private void updateUserProfile(FirebaseUser user, final Uri profileImageUri) {
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName("Jane Q. User")
-                .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
+                .setDisplayName(mName)
+                .setPhotoUri(profileImageUri)
                 .build();
 
         mFirebaseUser.updateProfile(profileUpdates)
@@ -151,10 +182,27 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d(LOG_TAG, "User profile updated.");
+                            User user = new User(mName, mEmail, mGender, mPhoneNumber, profileImageUri.toString());
+                            mFirebaseFirestore.collection("Users").document(mFirebaseUser.getUid())
+                                    .set(user)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d(LOG_TAG, "DocumentSnapshot successfully written!");
+                                            Toast.makeText(EditProfileActivity.this, "Profile registration completed", Toast.LENGTH_SHORT)
+                                                    .show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(LOG_TAG, "Error writing document", e);
+                                }
+                            });
                         }
                     }
                 });
+
+        mProgressDialog.cancel();
     }
 
     @Override
@@ -166,8 +214,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     try {
                         final Uri imageUri = data.getData();
-                        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                        mImageUri = imageUri;
+                        mLocalImageUri = imageUri;
                         Picasso.get().load(imageUri).into(mEditProfileImage, new Callback() {
                             @Override
                             public void onSuccess() {
