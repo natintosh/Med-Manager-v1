@@ -1,5 +1,6 @@
 package com.natinc.oluwatobiloba.medmanager.Activities;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -142,16 +143,15 @@ public class EditProfileActivity extends AppCompatActivity {
         String imageLabel = "IMG_" + mFirebaseUser.getUid();
         StorageReference profileImagesRef = mStorageRef.child("images/" + imageLabel);
 
-//        mEditProfileImage.setDrawingCacheEnabled(true);
-//        mEditProfileImage.buildDrawingCache();
-//        Bitmap bitmap = mEditProfileImage.getDrawingCache();
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//        byte[] data = baos.toByteArray();
-//
-//        mUploadTask = profileImagesRef.putBytes(data);
-
-        mUploadTask = profileImagesRef.putFile(mLocalImageUri);
+        if (mLocalImageUri != null) {
+            mUploadTask = profileImagesRef.putFile(mLocalImageUri);
+        } else {
+            mLocalImageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                    "://" + getResources().getResourcePackageName(R.drawable.default_profile)
+                    + '/' + getResources().getResourceTypeName(R.drawable.default_profile)
+                    + '/' + getResources().getResourceEntryName(R.drawable.default_profile));
+            mUploadTask = profileImagesRef.putFile(mLocalImageUri);
+        }
 
 
         // Register observers to listen for when the download is done or if it fails
