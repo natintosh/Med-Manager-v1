@@ -1,4 +1,4 @@
-package com.natinc.oluwatobiloba.medmanager;
+package com.natinc.oluwatobiloba.medmanager.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
+import com.natinc.oluwatobiloba.medmanager.R;
 
 import java.util.Arrays;
 import java.util.List;
