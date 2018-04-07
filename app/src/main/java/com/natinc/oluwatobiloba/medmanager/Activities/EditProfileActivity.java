@@ -30,8 +30,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.natinc.oluwatobiloba.medmanager.Models.User;
 import com.natinc.oluwatobiloba.medmanager.R;
-import com.natinc.oluwatobiloba.medmanager.User;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
