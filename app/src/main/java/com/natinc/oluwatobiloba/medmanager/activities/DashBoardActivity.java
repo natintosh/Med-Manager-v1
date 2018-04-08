@@ -24,7 +24,7 @@ public class DashBoardActivity extends AppCompatActivity {
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         UserDetailsFragment userDetailsFragment = new UserDetailsFragment();
-        userDetailsFragment.setFirebaseUser();
+        userDetailsFragment.setFirebaseUser(mFirebaseUser);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.user_details_container, userDetailsFragment)
