@@ -34,7 +34,7 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".models.AddMedicationActivivty"></activity>
+        <activity android:name=".activities.AddMedicationActivity"></activity>
     </application>
 
 </manifest>
