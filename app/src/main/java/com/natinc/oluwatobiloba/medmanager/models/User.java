@@ -1,4 +1,4 @@
-package com.natinc.oluwatobiloba.medmanager.Models;
+package com.natinc.oluwatobiloba.medmanager.models;
 
 /**
  * Created by oluwatobiloba on 3/30/18.

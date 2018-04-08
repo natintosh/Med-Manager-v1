@@ -1,4 +1,4 @@
-package com.natinc.oluwatobiloba.medmanager.Activities;
+package com.natinc.oluwatobiloba.medmanager.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
