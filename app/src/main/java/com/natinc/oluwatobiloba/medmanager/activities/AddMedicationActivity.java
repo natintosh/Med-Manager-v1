@@ -2,7 +2,9 @@ package com.natinc.oluwatobiloba.medmanager.activities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +17,17 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.natinc.oluwatobiloba.medmanager.R;
+import com.natinc.oluwatobiloba.medmanager.models.Medication;
 import com.natinc.oluwatobiloba.medmanager.ui.DatePickerFragment;
 import com.natinc.oluwatobiloba.medmanager.ui.TimePickerFragment;
 import com.natinc.oluwatobiloba.medmanager.utils.DateTimeHelper;
@@ -40,14 +50,21 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
     String mDescription;
     String mNumberOfPills;
     String mDose;
-    Timestamp mInterval;
+    long mInterval;
     Timestamp mStart;
     Timestamp mEnd;
+
+    // Firebase Instance Variable
+    FirebaseUser mFirebaseUser;
+    FirebaseFirestore mFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_medication);
+
+        mFirestore = FirebaseFirestore.getInstance();
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         initializingVariables();
 
@@ -84,16 +101,19 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
 
     private boolean isErrorInInput() {
         mNameOfDrug = mNameEditText.getText().toString();
+        mDescription = mDescriptionEditText.getText().toString();
         mDose = mDoseEditText.getText().toString();
         mNumberOfPills = mPillsEditText.getText().toString();
 
         if (mNameOfDrug.isEmpty()) {
             mNameLayout.setError("Enter a name");
+        } else if (mDescription.isEmpty()) {
+            mDescriptionLayout.setError("Enter a brief description about the drug");
         } else if (mNumberOfPills.isEmpty()) {
             mPillsLayout.setError("Enter total number of drugs");
         } else if (mDose.isEmpty()) {
             mDoseLayout.setError("Enter amount of dose");
-        } else if (mInterval == null) {
+        } else if (mInterval == 0) {
             mIntervalLayout.setError("Enter the drug interval or frequency");
         } else if (mStart == null) {
             mStartLayout.setError("Enter a date");
@@ -101,6 +121,7 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
             mEndLayout.setError("Enter a date");
         } else {
             mNameLayout.setErrorEnabled(false);
+            mDescriptionLayout.setErrorEnabled(false);
             mPillsLayout.setErrorEnabled(false);
             mDoseLayout.setErrorEnabled(false);
             mIntervalLayout.setErrorEnabled(false);
@@ -145,10 +166,25 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         int id = item.getItemId();
 
         if (id == R.id.menu_add_medication) {
-            if (isErrorInInput()) {
-
-            } else {
-
+            if (!isErrorInInput()) {
+                Medication medication = new Medication(mNameOfDrug, mDescription, mNumberOfPills, mDose, mInterval, mStart, mEnd);
+                mFirestore.collection("Users").document(mFirebaseUser.getUid())
+                        .collection("Medications").add(medication)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                String successMessage = "Successfully added new medication";
+                                Toast.makeText(AddMedicationActivity.this, successMessage, Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(AddMedicationActivity.this, DashBoardActivity.class));
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                String errorMessage = "Error occurred while adding medication";
+                                Toast.makeText(AddMedicationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         }
         return super.onOptionsItemSelected(item);
@@ -176,8 +212,9 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         mDateTimeHelper.getEditText().setText(date);
 
         if (mDateTimeHelper.getEditText().equals(mIntervalEditText)) {
-            mInterval = new Timestamp(mCalendar.getTime());
-            
+            mInterval = hourOfDay * 60 * 60 + minute * 60;
+            String intervalString = hourOfDay + ":" + minute;
+            mDateTimeHelper.getEditText().setText(intervalString);
         } else if (mDateTimeHelper.getEditText().equals(mStartEditText)) {
             mStart = new Timestamp(mCalendar.getTime());
         } else if (mDateTimeHelper.getEditText().equals(mEndEditText)) {

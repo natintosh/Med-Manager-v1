@@ -102,7 +102,7 @@
             android:id="@+id/input_add_medication_interval"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number" />
+            android:inputType="" />
 
     </android.support.design.widget.TextInputLayout>
 
