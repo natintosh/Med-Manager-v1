@@ -8,7 +8,7 @@ public class Medication {
     private String description;
     private String numberOfPills;
     private String dose;
-    private String interval;
+    private Timestamp interval;
     private Timestamp start;
     private Timestamp end;
 
@@ -16,7 +16,7 @@ public class Medication {
 
     }
 
-    public Medication(String name, String description, String numberOfPills, String dose, String interval, Timestamp start, Timestamp end) {
+    public Medication(String name, String description, String numberOfPills, String dose, Timestamp interval, Timestamp start, Timestamp end) {
         this.name = name;
         this.description = description;
         this.numberOfPills = numberOfPills;
@@ -58,11 +58,11 @@ public class Medication {
         this.dose = dose;
     }
 
-    public String getInterval() {
+    public Timestamp getInterval() {
         return interval;
     }
 
-    public void setInterval(String interval) {
+    public void setInterval(Timestamp interval) {
         this.interval = interval;
     }
 

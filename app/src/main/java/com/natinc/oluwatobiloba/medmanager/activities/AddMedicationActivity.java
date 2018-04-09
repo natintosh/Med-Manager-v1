@@ -40,7 +40,7 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
     String mDescription;
     String mNumberOfPills;
     String mDose;
-    String mInterval;
+    Timestamp mInterval;
     Timestamp mStart;
     Timestamp mEnd;
 
@@ -51,6 +51,16 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
 
         initializingVariables();
 
+        mIntervalEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment timePicker = new TimePickerFragment();
+                timePicker.show(getSupportFragmentManager(), "timepicker");
+                mDateTimeHelper = new DateTimeHelper();
+                mDateTimeHelper.setEditText(mIntervalEditText);
+            }
+        });
+
         mStartEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,7 +68,6 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
                 datePicker.show(getSupportFragmentManager(), "datepicker");
                 mDateTimeHelper = new DateTimeHelper();
                 mDateTimeHelper.setEditText(mStartEditText);
-                mStart = new Timestamp(mCalendar.getTime());
             }
         });
 
@@ -69,7 +78,6 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
                 datePicker.show(getSupportFragmentManager(), "datepicker");
                 mDateTimeHelper = new DateTimeHelper();
                 mDateTimeHelper.setEditText(mEndEditText);
-                mEnd = new Timestamp(mCalendar.getTime());
             }
         });
     }
@@ -78,7 +86,6 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         mNameOfDrug = mNameEditText.getText().toString();
         mDose = mDoseEditText.getText().toString();
         mNumberOfPills = mPillsEditText.getText().toString();
-        mInterval = mIntervalEditText.getText().toString();
 
         if (mNameOfDrug.isEmpty()) {
             mNameLayout.setError("Enter a name");
@@ -86,7 +93,7 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
             mPillsLayout.setError("Enter total number of drugs");
         } else if (mDose.isEmpty()) {
             mDoseLayout.setError("Enter amount of dose");
-        } else if (mInterval.isEmpty()) {
+        } else if (mInterval == null) {
             mIntervalLayout.setError("Enter the drug interval or frequency");
         } else if (mStart == null) {
             mStartLayout.setError("Enter a date");
@@ -121,6 +128,7 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         mStartEditText = findViewById(R.id.input_add_medication_start_date);
         mEndEditText = findViewById(R.id.input_add_medication_end_date);
 
+        mIntervalEditText.setInputType(InputType.TYPE_NULL);
         mStartEditText.setInputType(InputType.TYPE_NULL);
         mEndEditText.setInputType(InputType.TYPE_NULL);
     }
@@ -166,5 +174,14 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
 
         String date = DateFormat.getDateFormat(this).format(mCalendar.getTime());
         mDateTimeHelper.getEditText().setText(date);
+
+        if (mDateTimeHelper.getEditText().equals(mIntervalEditText)) {
+            mInterval = new Timestamp(mCalendar.getTime());
+            
+        } else if (mDateTimeHelper.getEditText().equals(mStartEditText)) {
+            mStart = new Timestamp(mCalendar.getTime());
+        } else if (mDateTimeHelper.getEditText().equals(mEndEditText)) {
+            mEnd = new Timestamp(mCalendar.getTime());
+        }
     }
 }
