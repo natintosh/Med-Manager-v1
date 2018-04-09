@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardElevation="8dp">
+    app:cardElevation="12dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,6 +18,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             tools:src="@drawable/default_profile"
+            android:src="@drawable/default_profile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -25,19 +26,20 @@
         <TextView
             android:id="@+id/user_details_username"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            tools:text="John Doe"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeTextType="uniform"
+            android:text="John Doe"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            app:autoSizeMaxTextSize="100sp"
-            app:autoSizeMinTextSize="12sp"
-            app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_details_profile_image" />
+            app:layout_constraintTop_toBottomOf="@+id/user_details_profile_image"
+            tools:text="John Doe" />
 
         <TextView
             android:id="@+id/user_details_email"
@@ -45,11 +47,12 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            tools:text="test@test.com"
+            android:layout_marginTop="4dp"
+            android:text="test@test.com"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_details_username" />
+            app:layout_constraintTop_toBottomOf="@+id/user_details_username"
+            tools:text="test@test.com" />
 
     </android.support.constraint.ConstraintLayout>
 

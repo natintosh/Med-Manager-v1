@@ -1,19 +1,28 @@
 package com.natinc.oluwatobiloba.medmanager.ui;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.natinc.oluwatobiloba.medmanager.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 public class UserDetailsFragment extends Fragment {
+
+    private static final String TAG = UserDetailsFragment.class.getSimpleName();
 
     FirebaseUser mFirebaseUser;
 
@@ -29,63 +38,35 @@ public class UserDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user_details, container, false);
+
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         mUserProfileImageView = rootView.findViewById(R.id.user_details_profile_image);
         mUsernameTextView = rootView.findViewById(R.id.user_details_username);
         mUserEmailTextView = rootView.findViewById(R.id.user_details_email);
 
+        mUsernameTextView.setText(mFirebaseUser.getDisplayName());
+        mUserEmailTextView.setText(mFirebaseUser.getEmail());
+
+        if (mFirebaseUser.getPhotoUrl() != null) {
+            Picasso.get().load(this.mFirebaseUser.getPhotoUrl())
+                    .resize(120, 120)
+                    .into(mUserProfileImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Bitmap imageBitmap = ((BitmapDrawable) mUserProfileImageView.getDrawable()).getBitmap();
+                            RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                            imageDrawable.setCircular(true);
+                            imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                            mUserProfileImageView.setImageDrawable(imageDrawable);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            mUserProfileImageView.setImageResource(R.drawable.default_profile);
+                        }
+                    });
+
+        }
         return rootView;
     }
-
-//    public void setFirebaseUser(FirebaseUser firebaseUser) {
-//        mFirebaseUser = firebaseUser;
-//
-//        if (firebaseUser != null) {
-//            Toast.makeText(getActivity(), "Not User", Toast.LENGTH_SHORT).show();
-////            loadProfileImage(mFirebaseUser);
-////            mUsernameTextView.setText(mFirebaseUser.getDisplayName());
-////            mUserEmailTextView.setText(mFirebaseUser.getEmail());
-//        }else {
-//            Toast.makeText(getActivity(), "Null User", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//
-//    private void loadProfileImage(FirebaseUser mFirebaseUser) {
-//
-//        if (mFirebaseUser.getPhotoUrl() != null) {
-//            Picasso.get().load(this.mFirebaseUser.getPhotoUrl())
-//                    .resize(120, 120)
-//                    .into(mUserProfileImageView, new Callback() {
-//                        @Override
-//                        public void onSuccess() {
-//                            Bitmap imageBitmap = ((BitmapDrawable) mUserProfileImageView.getDrawable()).getBitmap();
-//                            RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
-//                            imageDrawable.setCircular(true);
-//                            imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-//                            mUserProfileImageView.setImageDrawable(imageDrawable);
-//                        }
-//
-//                        @Override
-//                        public void onError(Exception e) {
-//                            mUserProfileImageView.setImageResource(R.drawable.default_profile);
-//                        }
-//                    });
-//        } else {Picasso.get().load(R.drawable.default_profile)
-//                .resize(120, 120)
-//                .into(mUserProfileImageView, new Callback() {
-//                    @Override
-//                    public void onSuccess() {
-//                        Bitmap imageBitmap = ((BitmapDrawable) mUserProfileImageView.getDrawable()).getBitmap();
-//                        RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
-//                        imageDrawable.setCircular(true);
-//                        imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-//                        mUserProfileImageView.setImageDrawable(imageDrawable);
-//                    }
-//
-//                    @Override
-//                    public void onError(Exception e) {
-//                        mUserProfileImageView.setImageResource(R.drawable.default_profile);
-//                    }
-//                });
-//        }
-//    }
 }
