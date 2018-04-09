@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +17,10 @@ import android.widget.TimePicker;
 
 import com.natinc.oluwatobiloba.medmanager.R;
 import com.natinc.oluwatobiloba.medmanager.ui.DatePickerFragment;
+import com.natinc.oluwatobiloba.medmanager.ui.TimePickerFragment;
+import com.natinc.oluwatobiloba.medmanager.utils.DateTimeHelper;
+
+import java.util.Calendar;
 
 public class AddMedicationActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -25,6 +30,8 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
     EditText mNameEditText, mDescriptionEditText, mNumberEditText,
             mPillsEditText, mDoseEditText, mIntervalEditText, mStartEditText, mEndEditText;
 
+    DateTimeHelper mDateTimeHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,11 +40,24 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         initializingVariables();
         invalidateInputs();
 
+
         mStartEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getSupportFragmentManager(), "datepicker");
+                mDateTimeHelper = new DateTimeHelper();
+                mDateTimeHelper.setEditText(mStartEditText);
+            }
+        });
+
+        mEndEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment datePicker = new DatePickerFragment();
+                datePicker.show(getSupportFragmentManager(), "datepicker");
+                mDateTimeHelper = new DateTimeHelper();
+                mDateTimeHelper.setEditText(mEndEditText);
             }
         });
     }
@@ -84,12 +104,24 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-        DialogFragment timePicker = new DatePickerFragment();
+        DialogFragment timePicker = new TimePickerFragment();
         timePicker.show(getSupportFragmentManager(), "timePicker");
+        mDateTimeHelper.setYear(year);
+        mDateTimeHelper.setMonth(month);
+        mDateTimeHelper.setDayOfMonth(dayOfMonth);
     }
 
     @Override
-    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+        mDateTimeHelper.setHourOfDay(hourOfDay);
+        mDateTimeHelper.setMinute(minute);
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mDateTimeHelper.getYear(), mDateTimeHelper.getMonth(), mDateTimeHelper.getDayOfMonth(),
+                mDateTimeHelper.getHourOfDay(), mDateTimeHelper.getMinute());
+
+        String date = DateFormat.getDateFormat(this).format(calendar);
+
+        mDateTimeHelper.getEditText().setText(date);
     }
 }
