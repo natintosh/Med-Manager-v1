@@ -1,5 +1,7 @@
 package com.natinc.oluwatobiloba.medmanager.models;
 
+import com.google.firebase.Timestamp;
+
 public class Medication {
 
     private String name;
@@ -7,14 +9,14 @@ public class Medication {
     private String numberOfPills;
     private String dose;
     private String interval;
-    private String start;
-    private String end;
+    private Timestamp start;
+    private Timestamp end;
 
     public Medication() {
 
     }
 
-    public Medication(String name, String description, String numberOfPills, String dose, String interval, String start, String end) {
+    public Medication(String name, String description, String numberOfPills, String dose, String interval, Timestamp start, Timestamp end) {
         this.name = name;
         this.description = description;
         this.numberOfPills = numberOfPills;
@@ -64,19 +66,19 @@ public class Medication {
         this.interval = interval;
     }
 
-    public String getStart() {
+    public Timestamp getStart() {
         return start;
     }
 
-    public void setStart(String start) {
+    public void setStart(Timestamp start) {
         this.start = start;
     }
 
-    public String getEnd() {
+    public Timestamp getEnd() {
         return end;
     }
 
-    public void setEnd(String end) {
+    public void setEnd(Timestamp end) {
         this.end = end;
     }
 }

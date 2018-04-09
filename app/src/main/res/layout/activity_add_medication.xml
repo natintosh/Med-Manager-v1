@@ -1,119 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.AddMedicationActivity">
 
-    <LinearLayout
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_add_medication_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Name of drug"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_add_medication_name"
+        <EditText
+            android:id="@+id/input_add_medication_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name of drug">
+            android:inputType="text" />
 
-            <EditText
-                android:id="@+id/input_add_medication_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Name of drug"
-                android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
 
-        </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_add_medication_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_layout_add_medication_name">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_add_medication_description"
+        <EditText
+            android:id="@+id/input_add_medication_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description">
+            android:inputType="text" />
 
-            <EditText
-                android:id="@+id/input_add_medication_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Description"
-                android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
 
-        </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_add_medication_pills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Number of pills"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/input_layout_add_medication_description"
+        app:layout_constraintTop_toBottomOf="@+id/input_layout_add_medication_description">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_add_medication_pills"
+        <EditText
+            android:id="@+id/input_add_medication_pills"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Number of pills">
+            android:inputType="number" />
 
-            <EditText
-                android:id="@+id/input_add_medication_pills"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Number of pills"
-                android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
 
-        </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_add_medication_dose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Dose"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/input_layout_add_medication_pills"
+        app:layout_constraintTop_toBottomOf="@+id/input_layout_add_medication_pills">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_add_medication_dose"
+        <EditText
+            android:id="@+id/input_add_medication_dose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Dose">
+            android:inputType="number" />
 
-            <EditText
-                android:id="@+id/input_add_medication_dose"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Dose"
-                android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
 
-        </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_add_medication_interval"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Interval (HH:MM)"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_layout_add_medication_dose">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_add_medication_interval"
+        <EditText
+            android:id="@+id/input_add_medication_interval"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Interval (HH:MM)">
+            android:inputType="number" />
 
-            <EditText
-                android:id="@+id/input_add_medication_interval"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Interval (HH:MM)"
-                android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
 
-        </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_add_medication_start_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Start Date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_layout_add_medication_interval">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_add_medication_start_date"
+        <EditText
+            android:id="@+id/input_add_medication_start_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Start Date">
+            android:inputType="" />
 
-            <EditText
-                android:id="@+id/input_add_medication_start_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Start date"
-                android:inputType="none" />
+    </android.support.design.widget.TextInputLayout>
 
-        </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_add_medication_end_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="End date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_layout_add_medication_start_date">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_add_medication_end_date"
+        <EditText
+            android:id="@+id/input_add_medication_end_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="End date">
+            android:inputType="" />
 
-            <EditText
-                android:id="@+id/input_add_medication_end_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="End date"
-                android:inputType="none" />
+    </android.support.design.widget.TextInputLayout>
 
-        </android.support.design.widget.TextInputLayout>
-
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

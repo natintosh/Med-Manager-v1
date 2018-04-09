@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.google.firebase.Timestamp;
 import com.natinc.oluwatobiloba.medmanager.R;
 import com.natinc.oluwatobiloba.medmanager.ui.DatePickerFragment;
 import com.natinc.oluwatobiloba.medmanager.ui.TimePickerFragment;
@@ -30,7 +32,17 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
     EditText mNameEditText, mDescriptionEditText, mNumberEditText,
             mPillsEditText, mDoseEditText, mIntervalEditText, mStartEditText, mEndEditText;
 
+    Calendar mCalendar;
+
     DateTimeHelper mDateTimeHelper;
+
+    String mNameOfDrug;
+    String mDescription;
+    String mNumberOfPills;
+    String mDose;
+    String mInterval;
+    Timestamp mStart;
+    Timestamp mEnd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +50,6 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         setContentView(R.layout.activity_add_medication);
 
         initializingVariables();
-        invalidateInputs();
-
 
         mStartEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +58,7 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
                 datePicker.show(getSupportFragmentManager(), "datepicker");
                 mDateTimeHelper = new DateTimeHelper();
                 mDateTimeHelper.setEditText(mStartEditText);
+                mStart = new Timestamp(mCalendar.getTime());
             }
         });
 
@@ -58,12 +69,39 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
                 datePicker.show(getSupportFragmentManager(), "datepicker");
                 mDateTimeHelper = new DateTimeHelper();
                 mDateTimeHelper.setEditText(mEndEditText);
+                mEnd = new Timestamp(mCalendar.getTime());
             }
         });
     }
 
-    private void invalidateInputs() {
+    private boolean isErrorInInput() {
+        mNameOfDrug = mNameEditText.getText().toString();
+        mDose = mDoseEditText.getText().toString();
+        mNumberOfPills = mPillsEditText.getText().toString();
+        mInterval = mIntervalEditText.getText().toString();
 
+        if (mNameOfDrug.isEmpty()) {
+            mNameLayout.setError("Enter a name");
+        } else if (mNumberOfPills.isEmpty()) {
+            mPillsLayout.setError("Enter total number of drugs");
+        } else if (mDose.isEmpty()) {
+            mDoseLayout.setError("Enter amount of dose");
+        } else if (mInterval.isEmpty()) {
+            mIntervalLayout.setError("Enter the drug interval or frequency");
+        } else if (mStart == null) {
+            mStartLayout.setError("Enter a date");
+        } else if (mEnd == null) {
+            mEndLayout.setError("Enter a date");
+        } else {
+            mNameLayout.setErrorEnabled(false);
+            mPillsLayout.setErrorEnabled(false);
+            mDoseLayout.setErrorEnabled(false);
+            mIntervalLayout.setErrorEnabled(false);
+            mStartLayout.setErrorEnabled(false);
+            mEndLayout.setErrorEnabled(false);
+            return false;
+        }
+        return true;
     }
 
     private void initializingVariables() {
@@ -83,6 +121,8 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         mStartEditText = findViewById(R.id.input_add_medication_start_date);
         mEndEditText = findViewById(R.id.input_add_medication_end_date);
 
+        mStartEditText.setInputType(InputType.TYPE_NULL);
+        mEndEditText.setInputType(InputType.TYPE_NULL);
     }
 
     @Override
@@ -97,7 +137,11 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         int id = item.getItemId();
 
         if (id == R.id.menu_add_medication) {
-            // Validate inputs and add medications to firebase
+            if (isErrorInInput()) {
+
+            } else {
+
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -116,12 +160,11 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         mDateTimeHelper.setHourOfDay(hourOfDay);
         mDateTimeHelper.setMinute(minute);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(mDateTimeHelper.getYear(), mDateTimeHelper.getMonth(), mDateTimeHelper.getDayOfMonth(),
+        mCalendar = Calendar.getInstance();
+        mCalendar.set(mDateTimeHelper.getYear(), mDateTimeHelper.getMonth(), mDateTimeHelper.getDayOfMonth(),
                 mDateTimeHelper.getHourOfDay(), mDateTimeHelper.getMinute());
 
-        String date = DateFormat.getDateFormat(this).format(calendar);
-
+        String date = DateFormat.getDateFormat(this).format(mCalendar.getTime());
         mDateTimeHelper.getEditText().setText(date);
     }
 }
