@@ -38,7 +38,7 @@ public class DashBoardActivity extends AppCompatActivity {
             }
         });
 
-        Toast.makeText(this, mFirebaseUser.getDisplayName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Welcome back" + mFirebaseUser.getDisplayName(), Toast.LENGTH_SHORT).show();
 
         UserDetailsFragment userDetailsFragment = new UserDetailsFragment();
 //        userDetailsFragment.setFirebaseUser(mFirebaseUser);

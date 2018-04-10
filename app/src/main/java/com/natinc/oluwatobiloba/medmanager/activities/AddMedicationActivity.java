@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -33,6 +32,7 @@ import com.natinc.oluwatobiloba.medmanager.ui.TimePickerFragment;
 import com.natinc.oluwatobiloba.medmanager.utils.DateTimeHelper;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class AddMedicationActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -51,8 +51,8 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
     String mNumberOfPills;
     String mDose;
     long mInterval;
-    Timestamp mStart;
-    Timestamp mEnd;
+    Date mStart;
+    Date mEnd;
 
     // Firebase Instance Variable
     FirebaseUser mFirebaseUser;
@@ -149,6 +149,9 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         mStartEditText = findViewById(R.id.input_add_medication_start_date);
         mEndEditText = findViewById(R.id.input_add_medication_end_date);
 
+        mIntervalEditText.setFocusable(false);
+        mStartEditText.setFocusable(false);
+        mEndEditText.setFocusable(false);
         mIntervalEditText.setInputType(InputType.TYPE_NULL);
         mStartEditText.setInputType(InputType.TYPE_NULL);
         mEndEditText.setInputType(InputType.TYPE_NULL);
@@ -216,9 +219,9 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
             String intervalString = hourOfDay + ":" + minute;
             mDateTimeHelper.getEditText().setText(intervalString);
         } else if (mDateTimeHelper.getEditText().equals(mStartEditText)) {
-            mStart = new Timestamp(mCalendar.getTime());
+            mStart = mCalendar.getTime();
         } else if (mDateTimeHelper.getEditText().equals(mEndEditText)) {
-            mEnd = new Timestamp(mCalendar.getTime());
+            mEnd = mCalendar.getTime();
         }
     }
 }
