@@ -5,6 +5,7 @@ import java.util.Date;
 public class Medication {
 
     private String name;
+    private int color;
     private String description;
     private String numberOfPills;
     private String dose;
@@ -12,8 +13,12 @@ public class Medication {
     private Date start;
     private Date end;
 
-    public Medication(String name, String description, String numberOfPills, String dose, long interval, Date start, Date end) {
+    public Medication() {
+    }
+
+    public Medication(String name, int color, String description, String numberOfPills, String dose, long interval, Date start, Date end) {
         this.name = name;
+        this.color = color;
         this.description = description;
         this.numberOfPills = numberOfPills;
         this.dose = dose;
@@ -28,6 +33,14 @@ public class Medication {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public String getDescription() {

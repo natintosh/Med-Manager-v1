@@ -3,6 +3,7 @@ package com.natinc.oluwatobiloba.medmanager.activities;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -33,6 +34,7 @@ import com.natinc.oluwatobiloba.medmanager.utils.DateTimeHelper;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 public class AddMedicationActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -47,6 +49,7 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
     DateTimeHelper mDateTimeHelper;
 
     String mNameOfDrug;
+    int mColor;
     String mDescription;
     String mNumberOfPills;
     String mDose;
@@ -101,6 +104,8 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
 
     private boolean isErrorInInput() {
         mNameOfDrug = mNameEditText.getText().toString();
+        Random mRandom = new Random();
+        mColor = Color.argb(255, mRandom.nextInt(256), mRandom.nextInt(256), mRandom.nextInt(256));
         mDescription = mDescriptionEditText.getText().toString();
         mDose = mDoseEditText.getText().toString();
         mNumberOfPills = mPillsEditText.getText().toString();
@@ -170,7 +175,7 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
 
         if (id == R.id.menu_add_medication) {
             if (!isErrorInInput()) {
-                Medication medication = new Medication(mNameOfDrug, mDescription, mNumberOfPills, mDose, mInterval, mStart, mEnd);
+                Medication medication = new Medication(mNameOfDrug, mColor, mDescription, mNumberOfPills, mDose, mInterval, mStart, mEnd);
                 mFirestore.collection("Users").document(mFirebaseUser.getUid())
                         .collection("Medications").add(medication)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
