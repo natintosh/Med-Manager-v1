@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.natinc.oluwatobiloba.medmanager.R;
+import com.natinc.oluwatobiloba.medmanager.ui.MedicationListFragment;
 import com.natinc.oluwatobiloba.medmanager.ui.UserDetailsFragment;
 
 public class DashBoardActivity extends AppCompatActivity {
@@ -41,10 +42,16 @@ public class DashBoardActivity extends AppCompatActivity {
         Toast.makeText(this, "Welcome back" + mFirebaseUser.getDisplayName(), Toast.LENGTH_SHORT).show();
 
         UserDetailsFragment userDetailsFragment = new UserDetailsFragment();
-//        userDetailsFragment.setFirebaseUser(mFirebaseUser);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.user_details_container, userDetailsFragment)
+                .commit();
+
+        MedicationListFragment medicationListFragment = new MedicationListFragment();
+
+        fragmentManager.beginTransaction()
+                .add(R.id.medication_list_container, medicationListFragment)
                 .commit();
     }
 }

@@ -16,6 +16,10 @@ public class MedicationListAdapter extends RecyclerView.Adapter<MedicationListAd
 
     List<Medication> mMedicationList;
 
+    public MedicationListAdapter(List<Medication> medicationList) {
+        this.mMedicationList = medicationList;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -25,7 +29,10 @@ public class MedicationListAdapter extends RecyclerView.Adapter<MedicationListAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        String name = mMedicationList.get(position).getName();
+        String description = mMedicationList.get(position).getDescription();
+        holder.mMedicationName.setText(name);
+        holder.mMedicationDescription.setText(description);
     }
 
     @Override
@@ -35,11 +42,11 @@ public class MedicationListAdapter extends RecyclerView.Adapter<MedicationListAd
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView mMedicationTitle, mMedicationDescription;
+        TextView mMedicationName, mMedicationDescription;
 
         ViewHolder(View itemView) {
             super(itemView);
-            mMedicationTitle = itemView.findViewById(R.id.medication_list_title);
+            mMedicationName = itemView.findViewById(R.id.medication_list_name);
             mMedicationDescription = itemView.findViewById(R.id.medication_list_description);
         }
     }
