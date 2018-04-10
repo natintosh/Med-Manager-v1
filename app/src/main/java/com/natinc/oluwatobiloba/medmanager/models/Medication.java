@@ -1,8 +1,11 @@
 package com.natinc.oluwatobiloba.medmanager.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
-public class Medication {
+public class Medication implements Parcelable {
 
     private String name;
     private int color;
@@ -89,5 +92,16 @@ public class Medication {
 
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }

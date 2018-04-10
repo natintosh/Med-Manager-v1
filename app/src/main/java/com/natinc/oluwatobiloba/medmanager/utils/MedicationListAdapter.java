@@ -55,7 +55,7 @@ public class MedicationListAdapter extends RecyclerView.Adapter<MedicationListAd
             super(itemView);
             mMedicationName = itemView.findViewById(R.id.medication_list_name);
             mMedicationDescription = itemView.findViewById(R.id.medication_list_description);
-            mIconTextview = itemView.findViewById(R.id.icon_textview);
+            mIconTextview = itemView.findViewById(R.id.medication_details_icon);
         }
     }
 }
