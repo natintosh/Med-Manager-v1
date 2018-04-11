@@ -1,5 +1,6 @@
 package com.natinc.oluwatobiloba.medmanager.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.natinc.oluwatobiloba.medmanager.R;
+import com.natinc.oluwatobiloba.medmanager.activities.MedicationDetails;
 import com.natinc.oluwatobiloba.medmanager.models.Medication;
 import com.natinc.oluwatobiloba.medmanager.utils.MedicationListAdapter;
 import com.natinc.oluwatobiloba.medmanager.utils.RecyclerTouchListener;
@@ -67,8 +68,11 @@ public class MedicationListFragment extends Fragment {
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), mRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Medication movie = mMedicationList.get(position);
-                Toast.makeText(getActivity(), movie.getName() + " is selected!", Toast.LENGTH_SHORT).show();
+                Medication medication = mMedicationList.get(position);
+                Intent intent = new Intent(getActivity(), MedicationDetails.class);
+                intent.putExtra(Intent.EXTRA_PACKAGE_NAME, medication);
+                intent.putExtra(Intent.EXTRA_UID, medication.medicationId);
+                startActivity(intent);
             }
 
             @Override
@@ -89,8 +93,9 @@ public class MedicationListFragment extends Fragment {
 
                 for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                     if (doc.getType() == DocumentChange.Type.ADDED) {
+                        String id = doc.getDocument().getId();
 
-                        Medication medication = doc.getDocument().toObject(Medication.class);
+                        Medication medication = doc.getDocument().toObject(Medication.class).withId(id);
                         mMedicationList.add(medication);
                         mMedicationListAdapter.notifyDataSetChanged();
                     }

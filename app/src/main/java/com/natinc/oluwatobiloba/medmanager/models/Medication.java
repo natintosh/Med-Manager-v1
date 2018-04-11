@@ -3,9 +3,9 @@ package com.natinc.oluwatobiloba.medmanager.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
+import com.natinc.oluwatobiloba.medmanager.utils.MedicationId;
 
-public class Medication implements Parcelable {
+public class Medication extends MedicationId implements Parcelable {
 
     private String name;
     private int color;
@@ -13,13 +13,25 @@ public class Medication implements Parcelable {
     private String numberOfPills;
     private String dose;
     private long interval;
-    private Date start;
-    private Date end;
+    public static final Creator<Medication> CREATOR = new Creator<Medication>() {
+        @Override
+        public Medication createFromParcel(Parcel in) {
+            return new Medication(in);
+        }
+
+        @Override
+        public Medication[] newArray(int size) {
+            return new Medication[size];
+        }
+    };
+    private long start;
 
     public Medication() {
     }
 
-    public Medication(String name, int color, String description, String numberOfPills, String dose, long interval, Date start, Date end) {
+    private long end;
+
+    public Medication(String name, int color, String description, String numberOfPills, String dose, long interval, long start, long end) {
         this.name = name;
         this.color = color;
         this.description = description;
@@ -28,6 +40,17 @@ public class Medication implements Parcelable {
         this.interval = interval;
         this.start = start;
         this.end = end;
+    }
+
+    protected Medication(Parcel in) {
+        name = in.readString();
+        color = in.readInt();
+        description = in.readString();
+        numberOfPills = in.readString();
+        dose = in.readString();
+        interval = in.readLong();
+        start = in.readLong();
+        end = in.readLong();
     }
 
     public String getName() {
@@ -78,23 +101,22 @@ public class Medication implements Parcelable {
         this.interval = interval;
     }
 
-    public Date getStart() {
+    public long getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(long start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public long getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(long end) {
         this.end = end;
     }
 
-    
     @Override
     public int describeContents() {
         return 0;
@@ -102,6 +124,13 @@ public class Medication implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-
+        parcel.writeString(name);
+        parcel.writeInt(color);
+        parcel.writeString(description);
+        parcel.writeString(numberOfPills);
+        parcel.writeString(dose);
+        parcel.writeLong(interval);
+        parcel.writeLong(start);
+        parcel.writeLong(end);
     }
 }

@@ -33,7 +33,6 @@ import com.natinc.oluwatobiloba.medmanager.ui.TimePickerFragment;
 import com.natinc.oluwatobiloba.medmanager.utils.DateTimeHelper;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
 
 public class AddMedicationActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -54,8 +53,8 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
     String mNumberOfPills;
     String mDose;
     long mInterval;
-    Date mStart;
-    Date mEnd;
+    long mStart;
+    long mEnd;
 
     // Firebase Instance Variable
     FirebaseUser mFirebaseUser;
@@ -120,9 +119,9 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
             mDoseLayout.setError("Enter amount of dose");
         } else if (mInterval == 0) {
             mIntervalLayout.setError("Enter the drug interval or frequency");
-        } else if (mStart == null) {
+        } else if (mStart == 0) {
             mStartLayout.setError("Enter a date");
-        } else if (mEnd == null) {
+        } else if (mEnd == 0) {
             mEndLayout.setError("Enter a date");
         } else {
             mNameLayout.setErrorEnabled(false);
@@ -224,9 +223,9 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
             String intervalString = hourOfDay + ":" + minute;
             mDateTimeHelper.getEditText().setText(intervalString);
         } else if (mDateTimeHelper.getEditText().equals(mStartEditText)) {
-            mStart = mCalendar.getTime();
+            mStart = mCalendar.getTimeInMillis();
         } else if (mDateTimeHelper.getEditText().equals(mEndEditText)) {
-            mEnd = mCalendar.getTime();
+            mEnd = mCalendar.getTimeInMillis();
         }
     }
 }

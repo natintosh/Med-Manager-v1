@@ -1,10 +1,12 @@
 package com.natinc.oluwatobiloba.medmanager.models;
 
+import com.natinc.oluwatobiloba.medmanager.utils.UserId;
+
 /**
  * Created by oluwatobiloba on 3/30/18.
  */
 
-public class User {
+public class User extends UserId {
 
     private String name;
     private String email;
