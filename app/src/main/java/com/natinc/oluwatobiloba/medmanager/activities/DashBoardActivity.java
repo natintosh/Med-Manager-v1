@@ -1,9 +1,11 @@
 package com.natinc.oluwatobiloba.medmanager.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -58,5 +60,18 @@ public class DashBoardActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .add(R.id.medication_list_container, medicationListFragment)
                 .commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(DashBoardActivity.this);
+        builder.setMessage("Do you want to close the application? ");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        }).setNegativeButton("No", null);
+        builder.show();
     }
 }
