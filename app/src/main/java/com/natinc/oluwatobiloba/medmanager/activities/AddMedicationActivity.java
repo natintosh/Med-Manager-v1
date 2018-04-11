@@ -219,7 +219,9 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
                     }
                 });
         if (!ConnectionUtils.isConnected(this)) {
-            startActivity(new Intent(AddMedicationActivity.this, DashBoardActivity.class));
+            Intent intent = new Intent(AddMedicationActivity.this, DashBoardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             finish();
             buildCalenderIntent();
         }
