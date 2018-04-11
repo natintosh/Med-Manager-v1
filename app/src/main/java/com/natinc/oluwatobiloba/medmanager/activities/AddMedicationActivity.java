@@ -31,6 +31,7 @@ import com.natinc.oluwatobiloba.medmanager.R;
 import com.natinc.oluwatobiloba.medmanager.models.Medication;
 import com.natinc.oluwatobiloba.medmanager.ui.DatePickerFragment;
 import com.natinc.oluwatobiloba.medmanager.ui.TimePickerFragment;
+import com.natinc.oluwatobiloba.medmanager.utils.ConnectionUtils;
 import com.natinc.oluwatobiloba.medmanager.utils.DateTimeHelper;
 
 import java.util.Calendar;
@@ -196,6 +197,11 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
                                 Toast.makeText(AddMedicationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                             }
                         });
+                if (!ConnectionUtils.isConnected(this)) {
+                    String message = "You are not connected to the internet, your data hasn't been sync yet";
+                    startActivity(new Intent(AddMedicationActivity.this, DashBoardActivity.class));
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                }
             }
         }
         return super.onOptionsItemSelected(item);

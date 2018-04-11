@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.natinc.oluwatobiloba.medmanager.R;
 import com.natinc.oluwatobiloba.medmanager.models.Medication;
+import com.natinc.oluwatobiloba.medmanager.utils.ConnectionUtils;
 
 import java.util.Calendar;
 
@@ -130,6 +131,11 @@ public class MedicationDetails extends AppCompatActivity {
                             Toast.makeText(MedicationDetails.this, "Error occurred while deleting", Toast.LENGTH_SHORT).show();
                         }
                     });
+            if (!ConnectionUtils.isConnected(this)) {
+                String message = "You are not connected to the internet, your data hasn't been sync yet";
+                startActivity(new Intent(MedicationDetails.this, DashBoardActivity.class));
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }

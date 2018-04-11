@@ -39,7 +39,7 @@ public class UserDetailsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user_details, container, false);
 
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -75,7 +75,10 @@ public class UserDetailsFragment extends Fragment {
         mUserEditprofileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), EditProfileActivity.class));
+                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+                intent.putExtra(Intent.EXTRA_REFERRER_NAME, "Details");
+                startActivity(intent);
+
             }
         });
         return rootView;

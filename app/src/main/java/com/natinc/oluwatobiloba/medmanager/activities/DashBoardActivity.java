@@ -6,12 +6,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.natinc.oluwatobiloba.medmanager.R;
 import com.natinc.oluwatobiloba.medmanager.ui.MedicationListFragment;
 import com.natinc.oluwatobiloba.medmanager.ui.UserDetailsFragment;
+import com.natinc.oluwatobiloba.medmanager.utils.ConnectionUtils;
 
 public class DashBoardActivity extends AppCompatActivity {
 
@@ -24,6 +26,13 @@ public class DashBoardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
+
+
+        if (!ConnectionUtils.isConnected(this)) {
+            String message = "You are not connected to the internet, any changes made have not been sync";
+            startActivity(new Intent(DashBoardActivity.this, DashBoardActivity.class));
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        }
 
         addFab = findViewById(R.id.add_fab);
 

@@ -68,6 +68,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     Uri mLocalImageUri;
 
+    String intentReferrer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,9 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent getintent = getIntent();
+        intentReferrer = getintent.getStringExtra(Intent.EXTRA_REFERRER_NAME);
 
         intantiatingVarible();
 
@@ -84,13 +88,18 @@ public class EditProfileActivity extends AppCompatActivity {
         mFirebaseFirestore = FirebaseFirestore.getInstance();
         mStorageRef = mFirebaseStorage.getReference();
 
-        if (mFirebaseUser.getDisplayName() != null) {
-            mName = mFirebaseUser.getDisplayName();
-            mEditEmailTextView.setVisibility(View.VISIBLE);
-            mNameTextEditText.setVisibility(View.INVISIBLE);
-        } else {
+        if (intentReferrer == "Details") {
             mEditEmailTextView.setVisibility(View.INVISIBLE);
             mNameTextEditText.setVisibility(View.VISIBLE);
+        } else {
+            if (mFirebaseUser.getDisplayName() != null) {
+                mName = mFirebaseUser.getDisplayName();
+                mEditEmailTextView.setVisibility(View.VISIBLE);
+                mNameTextEditText.setVisibility(View.INVISIBLE);
+            } else {
+                mEditEmailTextView.setVisibility(View.INVISIBLE);
+                mNameTextEditText.setVisibility(View.VISIBLE);
+            }
         }
 
         loadProfileImage();
@@ -135,8 +144,12 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updateInstanceVarible() {
-        if (mFirebaseUser.getDisplayName() == null) {
+        if (intentReferrer == "Details") {
             mName = mNameTextEditText.getText().toString();
+        } else {
+            if (mFirebaseUser.getDisplayName() == null) {
+                mName = mNameTextEditText.getText().toString();
+            }
         }
         if (mPhoneNumberTextEditText.getText().toString().equals(getResources().getText(R.string.phone_number_default_value))) {
             mPhoneNumber = null;
