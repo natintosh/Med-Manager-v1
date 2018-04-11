@@ -40,6 +40,8 @@ import java.util.Random;
 
 public class AddMedicationActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
+    private static final int RC_CALENDER_INTENT = 100;
+
     TextInputLayout mNameLayout, mDescriptionLayout,
             mPillsLayout, mDoseLayout, mIntervalLayout, mStartLayout, mEndLayout;
 
@@ -180,43 +182,51 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
             NavUtils.navigateUpFromSameTask(this);
         } else if (id == R.id.menu_add_medication) {
             if (!isErrorInInput()) {
-                Medication medication = new Medication(mNameOfDrug, mColor, mDescription, mNumberOfPills, mDose, mInterval, mStart, mEnd);
-                mFirestore.collection("Users").document(mFirebaseUser.getUid())
-                        .collection("Medications").add(medication)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                String successMessage = "Successfully added new medication";
-                                Toast.makeText(AddMedicationActivity.this, successMessage, Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(AddMedicationActivity.this, DashBoardActivity.class));
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                String errorMessage = "Error occurred while adding medication";
-                                Toast.makeText(AddMedicationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                if (!ConnectionUtils.isConnected(this)) {
-                    startActivity(new Intent(AddMedicationActivity.this, DashBoardActivity.class));
-                }
+                startActivityForResult(buildCalenderIntent(), RC_CALENDER_INTENT);
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void buildCalenderIntent() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_CALENDER_INTENT) {
+            addNewMedication();
+        } else {
+            Toast.makeText(this, "Failed to add new item", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void addNewMedication() {
+        Medication medication = new Medication(mNameOfDrug, mColor, mDescription, mNumberOfPills, mDose, mInterval, mStart, mEnd);
+        mFirestore.collection("Users").document(mFirebaseUser.getUid())
+                .collection("Medications").add(medication)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        String successMessage = "Successfully added new medication";
+                        Toast.makeText(AddMedicationActivity.this, successMessage, Toast.LENGTH_SHORT).show();
+                        buildCalenderIntent();
+                        startActivity(new Intent(AddMedicationActivity.this, DashBoardActivity.class));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        String errorMessage = "Error occurred while adding medication";
+                        Toast.makeText(AddMedicationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+        if (!ConnectionUtils.isConnected(this)) {
+            startActivity(new Intent(AddMedicationActivity.this, DashBoardActivity.class));
+            finish();
+            buildCalenderIntent();
+        }
+    }
+
+    private Intent buildCalenderIntent() {
         String title = "Med Manager Reminder : " + mNameOfDrug;
-        int hour = (int) (mInterval / (60 * 60));
-
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(mEnd);
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
-        String rRule = "FREQ=HOURLY;" + "INTERVAL=" + hour + ";UNTIL=" + year + month + day + "T230000Z";
 
         Intent intent = new Intent(Intent.ACTION_INSERT);
         intent.setType("vnd.android.cursor.item/event");
@@ -224,12 +234,12 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
         intent.putExtra(CalendarContract.Events.DESCRIPTION, mDescription);
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, mStart);
         intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, mEnd);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
         intent.putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE);
         intent.putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
-        intent.putExtra(CalendarContract.Events.RRULE, rRule);
         intent.putExtra(CalendarContract.Events.HAS_ALARM, true);
-        intent.putExtra(CalendarContract.Events.ALLOWED_REMINDERS, true);
-        startActivity(intent);
+
+        return intent;
     }
 
     @Override
