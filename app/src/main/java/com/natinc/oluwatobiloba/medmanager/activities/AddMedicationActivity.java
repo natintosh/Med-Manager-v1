@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
@@ -198,13 +199,37 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
                             }
                         });
                 if (!ConnectionUtils.isConnected(this)) {
-                    String message = "You are not connected to the internet, your data hasn't been sync yet";
                     startActivity(new Intent(AddMedicationActivity.this, DashBoardActivity.class));
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 }
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void buildCalenderIntent() {
+        String title = "Med Manager Reminder : " + mNameOfDrug;
+        int hour = (int) (mInterval / (60 * 60));
+
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(mEnd);
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        String rRule = "FREQ=HOURLY;" + "INTERVAL=" + hour + ";UNTIL=" + year + month + day + "T230000Z";
+
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setType("vnd.android.cursor.item/event");
+        intent.putExtra(CalendarContract.Events.TITLE, title);
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, mDescription);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, mStart);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, mEnd);
+        intent.putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE);
+        intent.putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+        intent.putExtra(CalendarContract.Events.RRULE, rRule);
+        intent.putExtra(CalendarContract.Events.HAS_ALARM, true);
+        intent.putExtra(CalendarContract.Events.ALLOWED_REMINDERS, true);
+        startActivity(intent);
     }
 
     @Override
@@ -230,8 +255,13 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
 
         if (mDateTimeHelper.getEditText().equals(mIntervalEditText)) {
             mInterval = hourOfDay * 60 * 60 + minute * 60;
-            String intervalString = hourOfDay + ":" + minute;
-            mDateTimeHelper.getEditText().setText(intervalString);
+            if (minute < 10) {
+                String intervalString = hourOfDay + ":0" + minute;
+                mDateTimeHelper.getEditText().setText(intervalString);
+            } else {
+                String intervalString = hourOfDay + ":" + minute;
+                mDateTimeHelper.getEditText().setText(intervalString);
+            }
         } else if (mDateTimeHelper.getEditText().equals(mStartEditText)) {
             mStart = mCalendar.getTimeInMillis();
         } else if (mDateTimeHelper.getEditText().equals(mEndEditText)) {

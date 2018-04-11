@@ -30,7 +30,6 @@ public class DashBoardActivity extends AppCompatActivity {
 
         if (!ConnectionUtils.isConnected(this)) {
             String message = "You are not connected to the internet, any changes made have not been sync";
-            startActivity(new Intent(DashBoardActivity.this, DashBoardActivity.class));
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         }
 

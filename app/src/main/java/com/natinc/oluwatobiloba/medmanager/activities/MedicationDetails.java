@@ -85,8 +85,13 @@ public class MedicationDetails extends AppCompatActivity {
         mDescription.setText(description);
         mNumberOfPills.setText(numberOfPills);
         mDose.setText(dose);
-        String timeFormat = (interval) / (60 * 60) + ":" + ((interval) % (60 * 60)) / 60;
-        mInterval.setText(timeFormat);
+        if ((((interval) % (60 * 60)) / 60) < 10) {
+            String timeFormat = (interval) / (60 * 60) + ":0" + ((interval) % (60 * 60)) / 60;
+            mInterval.setText(timeFormat);
+        } else {
+            String timeFormat = (interval) / (60 * 60) + ":" + ((interval) % (60 * 60)) / 60;
+            mInterval.setText(timeFormat);
+        }
 
         setDate(mStart, start);
         setDate(mEnd, end);
@@ -132,9 +137,7 @@ public class MedicationDetails extends AppCompatActivity {
                         }
                     });
             if (!ConnectionUtils.isConnected(this)) {
-                String message = "You are not connected to the internet, your data hasn't been sync yet";
                 startActivity(new Intent(MedicationDetails.this, DashBoardActivity.class));
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
         }
         return super.onOptionsItemSelected(item);
