@@ -1,5 +1,6 @@
 package com.natinc.oluwatobiloba.medmanager.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.natinc.oluwatobiloba.medmanager.R;
+import com.natinc.oluwatobiloba.medmanager.activities.EditProfileActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -29,6 +31,7 @@ public class UserDetailsFragment extends Fragment {
     ImageView mUserProfileImageView;
     TextView mUsernameTextView;
     TextView mUserEmailTextView;
+    ImageView mUserEditprofileImageView;
 
     public UserDetailsFragment() {
 
@@ -43,6 +46,7 @@ public class UserDetailsFragment extends Fragment {
         mUserProfileImageView = rootView.findViewById(R.id.user_details_profile_image);
         mUsernameTextView = rootView.findViewById(R.id.user_details_username);
         mUserEmailTextView = rootView.findViewById(R.id.user_details_email);
+        mUserEditprofileImageView = rootView.findViewById(R.id.edit_profile_image);
 
         mUsernameTextView.setText(mFirebaseUser.getDisplayName());
         mUserEmailTextView.setText(mFirebaseUser.getEmail());
@@ -67,6 +71,13 @@ public class UserDetailsFragment extends Fragment {
                     });
 
         }
+
+        mUserEditprofileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), EditProfileActivity.class));
+            }
+        });
         return rootView;
     }
 }

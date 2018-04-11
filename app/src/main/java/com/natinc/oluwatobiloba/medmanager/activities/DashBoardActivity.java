@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,8 +37,6 @@ public class DashBoardActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        Toast.makeText(this, "Welcome back " + mFirebaseUser.getDisplayName(), Toast.LENGTH_SHORT).show();
 
         UserDetailsFragment userDetailsFragment = new UserDetailsFragment();
 

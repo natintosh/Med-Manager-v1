@@ -16,26 +16,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.DashBoardActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+        <activity android:name=".activities.DashBoardActivity"></activity>
         <activity android:name=".activities.EditProfileActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.natinc.oluwatobiloba.medmanager.activities.DashBoardActivity" />
         </activity>
-        <activity android:name=".activities.AddMedicationActivity" />
-        <activity android:name=".activities.MedicationDetails"></activity>
+        <activity android:name=".activities.AddMedicationActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.natinc.oluwatobiloba.medmanager.activities.DashBoardActivity" />
+        </activity>
+        <activity android:name=".activities.MedicationDetails">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.natinc.oluwatobiloba.medmanager.activities.DashBoardActivity" />
+        </activity>
     </application>
 
 </manifest>

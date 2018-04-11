@@ -73,9 +73,11 @@ public class SignInActivity extends AppCompatActivity {
                 FirebaseUserMetadata metadata = mFirebaseAuth.getCurrentUser().getMetadata();
                 if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
                     // The user is new, show them a fancy intro screen!
+                    Toast.makeText(this, "Welcome " + mFirebaseAuth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(SignInActivity.this, EditProfileActivity.class));
                 } else {
+                    Toast.makeText(this, "Welcome back " + mFirebaseAuth.getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
                     launchDashBoardIntent();
-                    finish();
                 }
             } else {
                 // Sign in failed
@@ -117,7 +119,7 @@ public class SignInActivity extends AppCompatActivity {
 
     private void launchDashBoardIntent() {
         Intent dashBoardIntent = new Intent(SignInActivity.this, DashBoardActivity.class);
-        dashBoardIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(dashBoardIntent);
+        finish();
     }
 }

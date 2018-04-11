@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.view.Menu;
@@ -25,12 +26,16 @@ import java.util.Calendar;
 public class MedicationDetails extends AppCompatActivity {
 
     private static final String TAG = MedicationDetails.class.getSimpleName();
+
     TextView mName, mIcon, mDescription, mNumberOfPills, mDose, mInterval, mStart, mEnd;
+
     Calendar mCalendar;
     Medication mMedication;
-    String mId;
+
     FirebaseUser mFirebaseUser;
     FirebaseFirestore mFirestore;
+
+    String mId;
     private String name;
     private int color;
     private String description;
@@ -45,12 +50,15 @@ public class MedicationDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medication_details);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent getActivityIntent = getIntent();
 
         mMedication = getActivityIntent.getParcelableExtra(Intent.EXTRA_PACKAGE_NAME);
         mId = getActivityIntent.getStringExtra(Intent.EXTRA_UID);
 
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mFirestore = FirebaseFirestore.getInstance();
 
         name = mMedication.getName();
         color = mMedication.getColor();
@@ -103,7 +111,9 @@ public class MedicationDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.menu_delete_medication) {
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+        } else if (id == R.id.menu_delete_medication) {
             mFirestore.collection("Users").document(mFirebaseUser.getUid())
                     .collection("Medications").document(mId)
                     .delete()

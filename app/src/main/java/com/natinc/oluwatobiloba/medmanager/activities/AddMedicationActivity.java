@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -64,6 +65,8 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_medication);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mFirestore = FirebaseFirestore.getInstance();
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -171,8 +174,9 @@ public class AddMedicationActivity extends AppCompatActivity implements DatePick
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.menu_add_medication) {
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+        } else if (id == R.id.menu_add_medication) {
             if (!isErrorInInput()) {
                 Medication medication = new Medication(mNameOfDrug, mColor, mDescription, mNumberOfPills, mDose, mInterval, mStart, mEnd);
                 mFirestore.collection("Users").document(mFirebaseUser.getUid())

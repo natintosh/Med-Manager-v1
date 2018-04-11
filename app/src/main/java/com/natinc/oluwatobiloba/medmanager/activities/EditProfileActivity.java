@@ -8,12 +8,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -72,6 +74,8 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         intantiatingVarible();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -122,7 +126,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 mProgressDialog.show();
                 mProgressDialog.setCancelable(false);
                 updateAndStoreUser();
-                startActivity(new Intent(EditProfileActivity.this, DashBoardActivity.class));
+                Intent intent = new Intent(EditProfileActivity.this, DashBoardActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -327,4 +333,14 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
